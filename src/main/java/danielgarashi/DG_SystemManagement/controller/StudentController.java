@@ -41,7 +41,7 @@ public class StudentController {
     @RequestMapping(value = "addCourse", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> addCourse(@RequestBody Student student, @RequestBody Course course){
         try {
-            DataBaseObject dataObject = studentService.addCourse(student, course);
+            DataBaseObject dataObject = studentService.addStudentCourse(student, course);
             String jsonDataObject = objectMapper.writeValueAsString(dataObject);
             if (dataObject.isErrorClass())
                 return ResponseEntity.badRequest().body(jsonDataObject);
@@ -56,6 +56,5 @@ public class StudentController {
     public ResponseEntity<String> cancelCourse(@RequestBody StudentCourse StudentCourse){
         return null;
     }
-
 
 }

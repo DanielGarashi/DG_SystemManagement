@@ -28,4 +28,11 @@ public class StudentCourseRepository {
         Query query = new Query(Criteria.where("studentCourse_studentId").is(id));
         return mongoTemplate.find(query, StudentCourse.class);
     }
+
+    public List<StudentCourse> getStudentCourseByIds(Long student_id, Long course_id) {
+        Query query = new Query(Criteria.where("studentCourse_studentId").is(student_id)
+                                                .and("studentCourse_courseId").is(course_id));
+
+        return mongoTemplate.find(query, StudentCourse.class);
+    }
 }

@@ -25,6 +25,11 @@ public class CourseRepository{
         return getAllCourses();
     }
 
+    public List<Course> getOptionalCourses(Student student, Course course) {
+        Query query = new Query(Criteria.where(""));
+        return getAllCourses();
+    }
+
     public List<Course> removeCourse(Course course) {
         mongoTemplate.remove(course);
         return getAllCourses();
