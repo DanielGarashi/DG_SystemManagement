@@ -1,6 +1,5 @@
 package danielgarashi.DG_SystemManagement.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
