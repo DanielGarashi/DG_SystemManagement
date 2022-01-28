@@ -6,10 +6,10 @@ import danielgarashi.DG_SystemManagement.entity.StudentCourse;
 import danielgarashi.DG_SystemManagement.repository.CourseRepository;
 import danielgarashi.DG_SystemManagement.repository.StudentCourseRepository;
 import danielgarashi.DG_SystemManagement.repository.StudentRepository;
-import danielgarashi.DG_SystemManagement.response_data_entity.DCourse;
-import danielgarashi.DG_SystemManagement.response_data_entity.DStudent;
-import danielgarashi.DG_SystemManagement.response_data_entity.DStudentError;
-import danielgarashi.DG_SystemManagement.response_data_entity.DataBaseObject;
+import danielgarashi.DG_SystemManagement.data_entity.json_response.DCourse;
+import danielgarashi.DG_SystemManagement.data_entity.json_response.DStudent;
+import danielgarashi.DG_SystemManagement.data_entity.json_response.DStudentError;
+import danielgarashi.DG_SystemManagement.data_entity.json_response.DataBaseObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
@@ -58,9 +58,9 @@ public class StudentService {
 
     private boolean canRegister(Course course, DataBaseObject dataObject) {
         int courseStartDate = ActionHelperService.getDateAsInt(course.getCourse_startDate());
-        final int TODAY_DATE = ActionHelperService.getTodayDateAsInt();
+        int todayDate = ActionHelperService.getTodayDateAsInt();
 
-        if(courseStartDate < TODAY_DATE)
+        if(courseStartDate < todayDate)
             return true;
 
         dataObject = new DStudentError("The course already started, you can't be registered!");

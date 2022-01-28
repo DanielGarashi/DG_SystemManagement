@@ -3,7 +3,7 @@ package danielgarashi.DG_SystemManagement.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import danielgarashi.DG_SystemManagement.entity.Student;
-import danielgarashi.DG_SystemManagement.response_data_entity.DataBaseObject;
+import danielgarashi.DG_SystemManagement.data_entity.json_response.DataBaseObject;
 import danielgarashi.DG_SystemManagement.service.AuthenticationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;

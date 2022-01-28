@@ -1,4 +1,4 @@
-package danielgarashi.DG_SystemManagement.response_data_entity;
+package danielgarashi.DG_SystemManagement.data_entity.json_response;
 
 import java.util.StringTokenizer;
 

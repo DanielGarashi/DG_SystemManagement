@@ -1,4 +1,4 @@
-package danielgarashi.DG_SystemManagement.response_data_entity;
+package danielgarashi.DG_SystemManagement.data_entity.json_response;
 
 public abstract class DataBaseObject {
     protected final static boolean ERROR_CLASS = true;

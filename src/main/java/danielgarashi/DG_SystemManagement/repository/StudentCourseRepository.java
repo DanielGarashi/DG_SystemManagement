@@ -12,10 +12,14 @@ import java.util.List;
 @Repository
 public class StudentCourseRepository {
     @Autowired
+    private IStudentCourseRepository iStudentCourseRepository;
+
+    @Autowired
     private MongoTemplate mongoTemplate;
 
     public List<StudentCourse> saveStudentCourse(StudentCourse studentCourse) {
-        mongoTemplate.save(studentCourse);
+        //mongoTemplate.save(studentCourse);
+        iStudentCourseRepository.save(studentCourse);
         return getStudentCourses(studentCourse.getStudentCourse_studentId());
     }
 

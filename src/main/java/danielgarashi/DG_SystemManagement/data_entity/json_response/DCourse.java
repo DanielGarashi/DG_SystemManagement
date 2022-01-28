@@ -1,4 +1,4 @@
-package danielgarashi.DG_SystemManagement.response_data_entity;
+package danielgarashi.DG_SystemManagement.data_entity.json_response;
 
 import danielgarashi.DG_SystemManagement.entity.Course;
 import lombok.AllArgsConstructor;
