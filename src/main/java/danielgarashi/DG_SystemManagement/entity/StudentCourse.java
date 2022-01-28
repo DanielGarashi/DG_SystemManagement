@@ -4,12 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document()
 @Data
 @ToString(includeFieldNames=true)
 public class StudentCourse {
+
+    @Transient
+    private static final String SEQUENCE_NAME = "studentCourse_sequence";
+
     @Id
     private Integer studentCourse_id;
     private Long studentCourse_studentId;
