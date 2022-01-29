@@ -1,5 +1,6 @@
 package danielgarashi.DG_SystemManagement.repository;
 
+import danielgarashi.DG_SystemManagement.entity.Student;
 import danielgarashi.DG_SystemManagement.entity.StudentCourse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -18,16 +19,17 @@ public class StudentCourseRepository {
     private MongoTemplate mongoTemplate;
 
     public List<StudentCourse> saveStudentCourse(StudentCourse studentCourse) {
-        //mongoTemplate.save(studentCourse);
-        iStudentCourseRepository.save(studentCourse);
+        mongoTemplate.save(studentCourse);
         return getStudentCourses(studentCourse.getStudentCourse_studentId());
     }
 
-    public List<StudentCourse> removeStudentCourse(StudentCourse studentCourse) {
-        mongoTemplate.remove(studentCourse);
-        return getStudentCourses(studentCourse.getStudentCourse_studentId());
+    public List<StudentCourse> removeStudentCourse(Long sc_id) {
+        Query query = new Query(Criteria.where("studentCourse_id").is(sc_id));
+        mongoTemplate.remove(query, StudentCourse.class);
+        return getStudentCourses(sc_id);
     }
 
+    //TODO: handle this
     public List<StudentCourse> getStudentCourses(Long id) {
         Query query = new Query(Criteria.where("studentCourse_studentId").is(id));
         return mongoTemplate.find(query, StudentCourse.class);
@@ -39,4 +41,9 @@ public class StudentCourseRepository {
 
         return mongoTemplate.find(query, StudentCourse.class);
     }
+
+    public StudentCourse getStudentCourseById(Long sc_id) {
+        return mongoTemplate.findById(sc_id, StudentCourse.class);
+    }
+
 }

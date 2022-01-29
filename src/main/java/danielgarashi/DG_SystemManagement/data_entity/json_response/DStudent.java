@@ -15,4 +15,21 @@ public class DStudent extends DataBaseObject{
     private Integer studentCoursesAmount;
     private List<StudentCourse> studentCourses;
     private List<Course> optionalCourses;
+    private String msg;
+
+    public DStudent(Student student, Integer studentCoursesAmount, List<StudentCourse> studentCourses, List<Course> optionalCourses) {
+        this.student = student;
+        this.studentCoursesAmount = studentCoursesAmount;
+        this.studentCourses = studentCourses;
+        this.optionalCourses = optionalCourses;
+        this.msg = null;
+    }
+
+    public DStudent(Student student, String msg){
+        this.student = student;
+        this.studentCoursesAmount = null;
+        this.studentCourses= null;
+        this.optionalCourses = null;
+        this.msg = msg;
+    }
 }

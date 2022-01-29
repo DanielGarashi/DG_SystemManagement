@@ -8,6 +8,9 @@ import lombok.Data;
 public class DStudentError extends DataBaseObject{
     private String error;
 
+    public DStudentError() {
+    }
+
     @Override
     public boolean isErrorClass() {
         return DataBaseObject.ERROR_CLASS;

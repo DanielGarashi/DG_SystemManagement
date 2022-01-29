@@ -25,7 +25,7 @@ public class CourseRepository{
         return getAllCourses();
     }
 
-    public List<Course> getOptionalCourses(Student student, Course course) {
+    public List<Course> getOptionalCourses(Long student_id) {
         Query query = new Query(Criteria.where(""));
         return getAllCourses();
     }
@@ -35,9 +35,7 @@ public class CourseRepository{
         return getAllCourses();
     }
 
-    public List<Course> getStudentOptionalCourses(Long id)
-    {
-        //Query query = new Query(Criteria.where("course_id"));
-        return getAllCourses();
+    public Course getCourseByIdD(Long studentCourse_id) {
+        return mongoTemplate.findById(studentCourse_id, Course.class);
     }
 }

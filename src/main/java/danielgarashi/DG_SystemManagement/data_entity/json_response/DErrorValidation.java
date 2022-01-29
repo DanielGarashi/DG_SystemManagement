@@ -3,16 +3,16 @@ package danielgarashi.DG_SystemManagement.data_entity.json_response;
 import java.util.StringTokenizer;
 
 public class DErrorValidation extends DataBaseObject {
-    public static DErrorValidation getError(String e){
+    public static void getError(String e, DErrorValidation dErrorValidation){
         StringTokenizer tokenizer = new StringTokenizer(e, "#");
         String errorStr = tokenizer.nextToken();
 
         if (tokenizer.hasMoreTokens()) {
             String[] errorFields = tokenizer.nextToken().split("_");
-            return new DErrorValidation(errorStr, errorFields);
+            dErrorValidation.setFields(errorFields);
         }
 
-        return new DErrorValidation(errorStr);
+        dErrorValidation.setError(errorStr);
     }
 
     private String error;

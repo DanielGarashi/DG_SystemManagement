@@ -1,27 +1,33 @@
 package danielgarashi.DG_SystemManagement.service;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDate;
 import java.util.StringTokenizer;
 
+@Service
+@AllArgsConstructor
+@Data
 public class ActionHelperService {
     public static int getTodayDateAsInt() {
-        LocalDate localDate = LocalDate.now();
-        int year = localDate.getYear();
-        int month = localDate.getDayOfMonth();
-        int day = localDate.getDayOfMonth();
+        final String TODAY_DATE = getTodayDate();
+        StringTokenizer token = new StringTokenizer(TODAY_DATE, "-");
+        int year = Integer.parseInt(token.nextToken());
+        int month = Integer.parseInt(token.nextToken());
+        int day = Integer.parseInt(token.nextToken());
 
         return year * 10000 + month * 100 + day;
     }
 
     public static String getTodayDate() {
-        int today_date = getTodayDateAsInt();
-
-        return getDateAsString(today_date);
+        return LocalDate.now().toString();
     }
 
     public static String getDateAsString(final int date) {
         int year = date / 10000;
-        int month = (date / 100) % 10;
+        int month = (date / 100) % 100;
         int day = date % 100;
 
         return new StringBuilder()

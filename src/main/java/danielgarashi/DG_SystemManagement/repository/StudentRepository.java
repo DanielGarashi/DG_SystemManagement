@@ -33,4 +33,8 @@ public class StudentRepository {
         Query query = new Query(Criteria.where("email").is(email));
         return mongoTemplate.find(query, Student.class);
     }
+
+    public Student updateStudent(Student studentToUpdate) {
+        return mongoTemplate.save(studentToUpdate);
+    }
 }

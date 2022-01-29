@@ -1,16 +1,13 @@
 package danielgarashi.DG_SystemManagement.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import danielgarashi.DG_SystemManagement.data_entity.json_response.*;
 import danielgarashi.DG_SystemManagement.entity.Course;
 import danielgarashi.DG_SystemManagement.entity.Student;
 import danielgarashi.DG_SystemManagement.entity.StudentCourse;
 import danielgarashi.DG_SystemManagement.repository.CourseRepository;
 import danielgarashi.DG_SystemManagement.repository.StudentCourseRepository;
 import danielgarashi.DG_SystemManagement.repository.StudentRepository;
-import danielgarashi.DG_SystemManagement.data_entity.json_response.DErrorValidation;
-import danielgarashi.DG_SystemManagement.data_entity.json_response.DStudent;
-import danielgarashi.DG_SystemManagement.data_entity.json_response.DStudentsList;
-import danielgarashi.DG_SystemManagement.data_entity.json_response.DataBaseObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.slf4j.Logger;
@@ -19,8 +16,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@AllArgsConstructor
+
 @Service
+@AllArgsConstructor
 @Data
 public class AuthenticationService {
     private final StudentRepository studentRepository;
@@ -53,37 +51,92 @@ public class AuthenticationService {
     private static final int MIN_FULL_NAME_LENGTH = 5;
     private static final int MIN_NAME_LENGTH = 2;
 
-    public DataBaseObject signUp(Student studentToSave) {
-        if(isStudentAlreadyExists(studentToSave.getStudent_id()))
-        {
-            String errorMsg = String.format("This user already in use, please try again");
-            AUTHENTICATOR_SERVICE_LOGGER.error("Error signUp_action: " + errorMsg);
-            return DErrorValidation.getError(errorMsg);
+    //TODO: if i have time change all this errors to error class
+    private static final String USER_EXISTS_ERROR_ENG = "This user already in use, please try again.";
+    private static final String USER_EXISTS_ERROR_HEB = "משתמש קיים, אנא נסה שנית.";
+    private static final String INVALID_PARAM_ERROR_ENG = "One or more of the parameters you entered are invalid.";
+    private static final String INVALID_PARAM_ERROR_HEB = "שדה אחד או יותר אינו תקין.";
+
+    private static final String UPDATE_STUDENT_DETAILS_SUCCESS_ENG = "Your details have been successfully updated!.";
+    private static final String UPDATE_STUDENT_DETAILS_SUCCESS_HEB = "פרטיך עודכנו בהצלחה!.";
+
+    public DataBaseObject signIn(Long id, String password){
+        DataBaseObject dataObject = new DErrorValidation();
+        Student student = studentRepository.getStudentById(id);
+        if(student == null || !(student.getStudent_password().equals(password)) ){
+            AUTHENTICATOR_SERVICE_LOGGER.error("Error signIn_action: {" + id + ", " + password + "}");
+            DErrorValidation.getError(INVALID_PARAM_ERROR_HEB, (DErrorValidation) dataObject);
+            return dataObject;
+        }
+        List<StudentCourse> studentCoursesList = studentCourseRepository.getStudentCourses(id);
+        Integer studentCoursesAmount = studentCoursesList != null ? studentCoursesList.size() : 0;
+        List<Course> courseList = courseRepository.getOptionalCourses(id);
+        DStudent dStudent = new DStudent(student, studentCoursesAmount, studentCoursesList, courseList);
+
+        AUTHENTICATOR_SERVICE_LOGGER.trace("signIn_action: {" + id + ", " + password + "} succeeded");
+        return dStudent;
+    }
+
+    public DataBaseObject signUp(Student studentToSave){
+        DataBaseObject dataObject = new DErrorValidation();
+        if(isStudentExists(studentToSave.getStudent_id())) {
+            ((DErrorValidation) dataObject).setError(USER_EXISTS_ERROR_HEB);
+        }
+        else if(verificationCheck(studentToSave, (DErrorValidation) dataObject)) {
+            AUTHENTICATOR_SERVICE_LOGGER.trace(String.format("signUp_action: Student with id %d- signUp succeeded", studentToSave.getStudent_id()));
+            List<Student> studentList = studentRepository.saveStudent(studentToSave);
+            dataObject = new DStudentsList(studentList);
         }
 
+        return dataObject;
+    }
+
+    public DataBaseObject updateStudentDetails(String verificationPassword, Student studentToUpdate){
+        DataBaseObject dataObject = new DErrorValidation();
+        Student student = studentRepository.getStudentById(studentToUpdate.getStudent_id());
+        String currPassword = student.getStudent_password();
+        boolean isEqual = currPassword.equals(verificationPassword);
+        if(student == null || !(student.getStudent_password().equals(verificationPassword))) {
+            ((DErrorValidation)dataObject).setError(INVALID_PARAM_ERROR_HEB);
+            return dataObject;
+        }
+
+        if(verificationCheck(studentToUpdate, (DErrorValidation) dataObject)){
+            AUTHENTICATOR_SERVICE_LOGGER.trace(String.format("signUp_action: Student with id %d- UpdateDetails succeeded", studentToUpdate.getStudent_id()));
+            Student updateStudent = studentRepository.updateStudent(studentToUpdate);
+            dataObject = new DStudent(updateStudent, UPDATE_STUDENT_DETAILS_SUCCESS_HEB);
+        }
+
+        return dataObject;
+    }
+
+    public boolean verificationCheck(Student student, DErrorValidation dErrorValidation) {
         boolean[] invalidateFields = new boolean[FIELDS_AMOUNT];
-        boolean isValidParam = isValidateParam(studentToSave.getStudent_id(),
-                studentToSave.getStudent_password(),
-                studentToSave.getStudent_firstName(),
-                studentToSave.getStudent_lastName(),
-                studentToSave.getStudent_email(),
+        boolean isValidParam = isValidateParam(student.getStudent_id(),
+                student.getStudent_password(),
+                student.getStudent_firstName(),
+                student.getStudent_lastName(),
+                student.getStudent_email(),
                 invalidateFields);
 
         if (!isValidParam) {
             String missingFields = buildMissingFieldsMsg(invalidateFields);
-            String errorMsg = String.format("One or more of the parameters you entered are invalid#%s", missingFields);
-            AUTHENTICATOR_SERVICE_LOGGER.error(String.format("Error signUp_action: %s", errorMsg));
-            return DErrorValidation.getError(errorMsg);
+            String errorMsg = String.format("%s#%s", INVALID_PARAM_ERROR_HEB, missingFields);
+            DErrorValidation.getError(errorMsg, dErrorValidation);
+            AUTHENTICATOR_SERVICE_LOGGER.error(String.format("Error signUp_action: %s", INVALID_PARAM_ERROR_ENG));
+            return false;
         }
 
-        AUTHENTICATOR_SERVICE_LOGGER.trace(String.format("signUp_action: Student with id %d- signUp succeeded", studentToSave.getStudent_id()));
-        List<Student> studentList = studentRepository.saveStudent(studentToSave);
-        DStudentsList dStudentsList = new DStudentsList(studentList);
-        return dStudentsList;
+        return true;
     }
 
-    private boolean isStudentAlreadyExists(Long id) {
-        return !(studentRepository.getStudentById(id) == null);
+    public boolean isStudentExists(Long id) {
+        Student student = studentRepository.getStudentById(id);
+        if(student == null)
+            return false;
+
+        AUTHENTICATOR_SERVICE_LOGGER.error("Error signUp_action: " + USER_EXISTS_ERROR_ENG);
+        return true;
     }
 
     private boolean isValidateParam(Long id, String password, String firstName, String lastName, String email, boolean[] validateFields) {
@@ -144,6 +197,7 @@ public class AuthenticationService {
 
     private String buildMissingFieldsMsg(boolean[] validateFields) {
         StringBuilder sb_msg = new StringBuilder();
+        //TODO: check if it can be changed to array of booleans with strings
         if(!validateFields[ID_FIELD])
             sb_msg.append("Invalid Id_");
 
@@ -160,21 +214,5 @@ public class AuthenticationService {
             sb_msg.append("Invalid Email_");
 
         return sb_msg.toString();
-    }
-
-    public DataBaseObject signIn(Long id, String password){
-        Student student = studentRepository.getStudentById(id);
-        if(student == null || !student.getStudent_password().equals(password)){
-            String errorMsg = String.format("One or more of the parameters you entered are invalid");
-            AUTHENTICATOR_SERVICE_LOGGER.error("Error signIn_action: {" + id + ", " + password + "}");
-            return DErrorValidation.getError(errorMsg);
-        }
-        List<StudentCourse> studentCoursesList = studentCourseRepository.getStudentCourses(id);
-        Integer studentCoursesAmount = studentCoursesList != null ? studentCoursesList.size() : 0;
-        List<Course> courseList = courseRepository.getStudentOptionalCourses(id);
-        DStudent dStudent = new DStudent(student, studentCoursesAmount, studentCoursesList, courseList);
-
-        AUTHENTICATOR_SERVICE_LOGGER.trace("signIn_action: {" + id + ", " + password + "} succeeded");
-        return dStudent;
     }
 }
