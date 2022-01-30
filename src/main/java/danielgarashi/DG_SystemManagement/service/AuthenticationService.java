@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static danielgarashi.DG_SystemManagement.entity.IndicationMsg.*;
+
 
 @Service
 @AllArgsConstructor
@@ -50,15 +52,6 @@ public class AuthenticationService {
     private static final int MIN_PASSWORD_LENGTH = 5;
     private static final int MIN_FULL_NAME_LENGTH = 5;
     private static final int MIN_NAME_LENGTH = 2;
-
-    //TODO: if i have time change all this errors to error class
-    private static final String USER_EXISTS_ERROR_ENG = "This user already in use, please try again.";
-    private static final String USER_EXISTS_ERROR_HEB = "משתמש קיים, אנא נסה שנית.";
-    private static final String INVALID_PARAM_ERROR_ENG = "One or more of the parameters you entered are invalid.";
-    private static final String INVALID_PARAM_ERROR_HEB = "שדה אחד או יותר אינו תקין.";
-
-    private static final String UPDATE_STUDENT_DETAILS_SUCCESS_ENG = "Your details have been successfully updated!.";
-    private static final String UPDATE_STUDENT_DETAILS_SUCCESS_HEB = "פרטיך עודכנו בהצלחה!.";
 
     public DataBaseObject signIn(Long id, String password){
         DataBaseObject dataObject = new DErrorValidation();

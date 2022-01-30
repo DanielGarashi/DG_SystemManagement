@@ -3,6 +3,7 @@ package danielgarashi.DG_SystemManagement.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import danielgarashi.DG_SystemManagement.data_entity.json_request.DR_SignUp;
+import danielgarashi.DG_SystemManagement.entity.IndicationMsg;
 import danielgarashi.DG_SystemManagement.entity.Student;
 import danielgarashi.DG_SystemManagement.data_entity.json_response.DataBaseObject;
 import danielgarashi.DG_SystemManagement.service.AuthenticationService;
@@ -11,16 +12,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static danielgarashi.DG_SystemManagement.entity.IndicationMsg.SERVER_GENERAL_ERROR_HEB;
+
 @RestController
 @RequestMapping("api/v1/authentication-action")
 @AllArgsConstructor
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final ObjectMapper objectMapper = new ObjectMapper();
-
-    //TODO: STRINGS
-    private static String SERVER_GENERAL_ERROR_ENG = "Unknown error, please try again.";
-    private static String SERVER_GENERAL_ERROR_HEB = "קרתה תקלה לא ידועה, אנא נסה שוב.";
 
     @RequestMapping(value = "signUp", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> signUp(@RequestBody DR_SignUp dr_signUp){

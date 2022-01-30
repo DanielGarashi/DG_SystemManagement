@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import static danielgarashi.DG_SystemManagement.entity.IndicationMsg.*;
+
 @Service
 @AllArgsConstructor
 @Data
@@ -26,22 +28,6 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
     private final StudentCourseRepository studentCourseRepository;
-
-    //TODO: if i have time change all this errors to error class
-    private static final String COURSE_STARTED_ERROR_ENG = "The course has already started, you can not register";
-    private static final String COURSE_STARTED_ERROR_HEB = "הקורס כבר התחיל, לא ניתן להירשם.";
-    private static final String STUDENT_REGISTERED_COURSE_ERROR_HEB = "You already registered to this course!.";
-    private static final String STUDENT_REGISTERED_COURSE_HEB = "הינך רשום לקורס זה, לא ניתן להירשם שוב.";
-    private static final String CANCEL_COURSE_SUCCESS_ENG = "Course cancellation completed successfully.";
-    private static final String CANCEL_COURSE_SUCCESS_HEB = "ביטול הקורס בוצע בהצלחה.";
-    private static final String STUDENT_CANCEL_STARTED_COURSE_ERROR_ENG = "The course already started, you can't cancel the registration";
-    private static final String STUDENT_CANCEL_STARTED_COURSE_ERROR_HEB = "הקורס כבר התחיל, לא ניתן לבטל רישום.";
-    private static final String COURSE_NOT_EXISTS_ERROR_ENG = "Course doesn't exists, please try again.";
-    private static final String COURSE_NOT_EXISTS_ERROR_HEB = "הקורס אינו קיים, אנא נסה שוב.";
-    private static final String STUDENT_COURSE_NOT_EXISTS_ERROR_ENG = "You are not registered for this course, please try again.";
-    private static final String STUDENT_COURSE_NOT_EXISTS_ERROR_HEB = "אינך רשום לקורס זה, אנא נסה שוב.";
-    private static final String STUDENT_NOT_EXISTS_ERROR_ENG = "Student not exists, please try again.";
-    private static final String STUDENT_NOT_EXISTS_ERROR_HEB = "סטודנט לא קיים, אנא נסה שוב.";
 
     public DataBaseObject saveCourse(Course course) {
         List<Course> courseList = courseRepository.saveCourse(course);
@@ -169,7 +155,6 @@ public class StudentService {
                 return false;
             }
         }
-
         return true;
     }
 

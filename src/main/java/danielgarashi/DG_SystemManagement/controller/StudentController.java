@@ -13,6 +13,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static danielgarashi.DG_SystemManagement.entity.IndicationMsg.SERVER_GENERAL_ERROR_HEB;
+
 @RestController
 @RequestMapping("api/v1/student-action")
 @AllArgsConstructor
@@ -20,10 +22,6 @@ public class StudentController {
     private final AuthenticationService authenticationService;
     private final StudentService studentService;
     private final ObjectMapper objectMapper = new ObjectMapper();
-
-    //TODO: STRINGS
-    private static String SERVER_GENERAL_ERROR_ENG = "Unknown error, please try again.";
-    private static String SERVER_GENERAL_ERROR_HEB = "קרתה תקלה לא ידועה, אנא נסה שוב.";
 
     @RequestMapping(value = "saveCourse", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> saveCourse(@RequestBody DR_SaveCourse dr_saveCourse){
